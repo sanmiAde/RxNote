@@ -51,8 +51,6 @@ class LoginFragment : Fragment() {
 
         initViewModel()
 
-        progressDialog = UiUtils.createProgressDialog(activity!!)
-
         navController = findNavController()
 
         btn_login.setOnClickListener {
@@ -64,15 +62,19 @@ class LoginFragment : Fragment() {
             when {
                 isFormValid -> {
 
-                        loginViewModel.signInUser(
-                            emailEditText?.text.toString(),
-                            passwordEditText?.text.toString()
-                        )
+                    loginViewModel.signInUser(
+                        emailEditText?.text.toString(),
+                        passwordEditText?.text.toString()
+                    )
 
                     observeLoginResource()
 
                 }
             }
+        }
+
+        btn_register.setOnClickListener {
+            navController.navigate(LoginFragmentDirections.actionLoginFragmentToNavigation())
         }
 
 
@@ -86,17 +88,18 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeLoginResource() {
+        progressDialog = UiUtils.createProgressDialog(activity!!)
         loginViewModel
             .getUserLoginResource()
             .observe(viewLifecycleOwner, Observer {
                 when (it.status) {
-                    Status.LOADING -> UiUtils.initLoadingDialog(progressDialog, "Login in...")
+                    Status.LOADING -> UiUtils.initLoadingDialog(progressDialog, getString(R.string.login_progress))
                     Status.ERROR -> {
                         UiUtils.stopLoadingDialog(progressDialog)
                         if (it.message != null) {
 
                         }
-                            UiUtils.createToastMessage(it.message!!, context!!)
+                        UiUtils.createToastMessage(it.message!!, context!!)
                     }
                     Status.LOADED -> {
                     }
@@ -140,9 +143,13 @@ class LoginFragment : Fragment() {
     private fun getAuthenticationState() {
         loginViewModel.getUserLoginResource().observe(viewLifecycleOwner, Observer {
             when (it.data) {
-                LoginViewModel.AuthenticationState.AUTHENTICATED -> {navController.navigate(R.id.todoFragment)}
-                LoginViewModel.AuthenticationState.UNAUTHENTICATED -> {}
-                null -> {}
+                LoginViewModel.AuthenticationState.AUTHENTICATED -> {
+                    navController.navigate(R.id.todoFragment)
+                }
+                LoginViewModel.AuthenticationState.UNAUTHENTICATED -> {
+                }
+                null -> {
+                }
             }
         })
     }

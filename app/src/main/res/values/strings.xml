@@ -6,4 +6,7 @@
     <string name="login">LOGIN</string>
     <string name="invalid_email">This email is invalid.</string>
     <string name="invalid_password">Password should be more than 5 characters</string>
+    <string name="login_progress">Login in...</string>
+    <string name="user_name_error">User name should not be empty</string>
+    <string name="password_not_the_same_error">Passwords are not the same</string>
 </resources>

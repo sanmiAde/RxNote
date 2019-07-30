@@ -13,31 +13,27 @@ import androidx.navigation.fragment.findNavController
 import com.sanmiaderibigbe.rxnote.R
 import com.sanmiaderibigbe.rxnote.ui.di.Injection
 import com.sanmiaderibigbe.rxnote.ui.login.LoginViewModel
+import com.sanmiaderibigbe.rxnote.ui.repo.Status
+import kotlinx.android.synthetic.main.fragment_todo.*
 
 
 class TodoFragment : Fragment() {
 
-
     private lateinit var loginViewModel: LoginViewModel
+    private lateinit var navController: NavController
 
     override fun onStart() {
         super.onStart()
+
+    }
+
+    private fun initViewModel() {
         val viewModelFactory = Injection.provideLoginModelFactory(activity?.application!!)
         loginViewModel = activity?.run {
             ViewModelProviders.of(this, viewModelFactory)[LoginViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        getAuthenticationState(findNavController())
     }
 
-    private fun getAuthenticationState(findNavController: NavController) {
-        loginViewModel.getUserLoginResource().observe(viewLifecycleOwner, Observer {
-            when (it.data) {
-                LoginViewModel.AuthenticationState.AUTHENTICATED -> {}
-                LoginViewModel.AuthenticationState.UNAUTHENTICATED -> {findNavController.navigate(TodoFragmentDirections.actionTodoFragmentToLoginFragment())}
-                null -> {}
-            }
-        })
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,5 +45,32 @@ class TodoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        initViewModel()
+        navController = findNavController()
+        getAuthenticationState()
+
+        btn_sign_out.setOnClickListener {
+            loginViewModel.signOut()
+        }
+    }
+
+
+    private fun getAuthenticationState() {
+        loginViewModel.getUserLoginResource().observe(viewLifecycleOwner, Observer {
+            when (it.status) {
+
+                Status.LOADING -> {}
+                Status.ERROR -> {}
+                Status.LOADED ->
+                    when(it.data){
+                        LoginViewModel.AuthenticationState.AUTHENTICATED -> {}
+                        LoginViewModel.AuthenticationState.UNAUTHENTICATED -> {navController.navigate(TodoFragmentDirections.actionTodoFragmentToLoginFragment())}
+                    }
+                Status.SUCCESS -> {}
+            }
+        })
+//    }
+
     }
 }

@@ -83,6 +83,11 @@ class LoginViewModel(private val firebaseRepository: FirebaseRepository) : ViewM
         disposable.clear()
     }
 
+    fun signOut() {
+       firebaseRepository.signOut()
+        loginResource.value = Resource.loaded(AuthenticationState.UNAUTHENTICATED)
+    }
+
 
     enum class AuthenticationState {
         AUTHENTICATED,

@@ -3,6 +3,7 @@ package com.sanmiaderibigbe.rxnote.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -47,5 +48,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomToNavController(navController: NavController) {
 
         bottomNav.setupWithNavController(navController)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+
+        val navController = findNavController(R.id.my_nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
