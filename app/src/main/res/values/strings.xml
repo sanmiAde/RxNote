@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RxNote</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">LOGIN</string>
+    <string name="invalid_email">This email is invalid.</string>
+    <string name="invalid_password">Password should be more than 5 characters</string>
 </resources>
